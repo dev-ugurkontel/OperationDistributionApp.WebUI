@@ -1,0 +1,86 @@
+<div class="p-3">
+
+    <div *ngIf="showAlert" @alertAnimation class="alert">
+        Data refreshed successfully!
+    </div>
+
+    <dx-data-grid
+            keyExpr="historyID"
+            [dataSource]="data"
+            [allowColumnReordering]="true"
+            [cacheEnabled]="true"
+            [columnAutoWidth]="true"
+            [wordWrapEnabled]="true"
+            [rowAlternationEnabled]="true"
+            [filterRow]="{ visible: true }"
+            [groupPanel]="{ visible: true }"
+            [searchPanel]="{ visible: true }"
+            [scrolling]="{
+                mode: 'virtual',
+                useNative: true
+            }">
+
+        <dxi-column dataField="historyID" caption="Id"></dxi-column>
+        <dxi-column dataField="employeeID" caption="Employee" cellTemplate="employeeTemplate"></dxi-column>
+        <dxi-column dataField="operationID" caption="Operation" cellTemplate="operationTemplate"></dxi-column>
+        <dxi-column dataField="difficulty" alignment="center" cellTemplate="difficultyTemplate"></dxi-column>
+        <dxi-column dataField="isActive" caption="Status" cellTemplate="isActiveTemplate"></dxi-column>
+        <dxi-column
+            dataField="createdAt"
+            dataType="date">
+        </dxi-column>
+
+        <div *dxTemplate="let row of 'employeeTemplate'">
+            <div>
+                <span>{{ row.data.employee.name }} {{ row.data.employee.surname }}</span>
+            </div>
+        </div>
+
+        <div *dxTemplate="let row of 'operationTemplate'">
+            <div>
+                <span>{{ row.data.operation.name }}</span>
+            </div>
+        </div>
+
+        <div *dxTemplate="let row of 'difficultyTemplate'">
+            <div>
+                <span class="badge bg-secondary">{{ row.data.difficulty }}</span>
+            </div>
+        </div>
+
+        <div *dxTemplate="let row of 'isActiveTemplate'">
+            <div>
+                <span class="badge bg-{{ row.data.isActive ? 'success' : 'danger' }}">{{ row.data.isActive ? 'Active' : 'Passive' }}</span>
+            </div>
+        </div>
+
+        <div *dxTemplate="let data of 'countdownDisplay'">
+            <span>Refreshing in <b>{{ countdown }}</b>s</span>
+        </div>
+    
+        <dxo-toolbar>
+            <dxi-item 
+                name="countdown"
+                location="before"
+                widget="dxTemplate"
+                template="countdownDisplay">
+            </dxi-item>
+    
+            <dxi-item 
+                name="refresh"
+                location="after"
+                widget="dxButton"
+                [options]="{ icon: 'refresh', onClick: onRefresh }">
+            </dxi-item>
+
+            <dxi-item 
+                name="deploy"
+                location="after"
+                widget="dxButton"
+                [options]="{ icon: 'upload', onClick: onDeploy }">
+            </dxi-item>
+        </dxo-toolbar>
+
+    </dx-data-grid>
+
+</div>
